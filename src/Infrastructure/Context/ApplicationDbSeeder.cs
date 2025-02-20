@@ -2,13 +2,13 @@ using Common.Authorization;
 
 namespace Infrastructure.Context;
 
-internal class ApplicationDbSeeder(
+public class ApplicationDbSeeder(
     ApplicationDbContext context,
-    RoleManager<IdentityRole> roleManager,
+    RoleManager<ApplicationRole> roleManager,
     UserManager<ApplicationUser> userManager)
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
     private readonly ApplicationDbContext _context = context;
 
     public async Task SeedAsync()
