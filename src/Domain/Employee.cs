@@ -1,6 +1,6 @@
 ﻿namespace Domain;
 
-public class Emplyee
+public class Employee
 {
     public int Id { get; set; }
     public string FirstName { get; set; }

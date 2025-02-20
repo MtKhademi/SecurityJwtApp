@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
-namespace Infrastructure.Context;
+﻿namespace Infrastructure.Context;
 
 public class ApplicationDbContext : IdentityDbContext<IdentityUser,
     IdentityRole,
@@ -15,4 +12,6 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser,
     {
 
     }
+
+    public DbSet<Employee> Employees => Set<Employee>();
 }
