@@ -2,9 +2,9 @@ using System.Collections.ObjectModel;
 
 namespace Common.Authorization;
 
-public record AppPermission(string Faature,string Action,string Group,string Description,bool IsBasic = false)
+public record AppPermission(string Feature,string Action,string Group,string Description,bool IsBasic = false)
 {
-    public string Name { get; set; }
+    public string Name => NameFor(Feature, Action);
     public static string NameFor(string feature,string action)
     => $"Permission.{feature}.{action}";
 }

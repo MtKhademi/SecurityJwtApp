@@ -2,12 +2,14 @@
 
 namespace Infrastructure.Context;
 
-public class ApplicationDbContext : IdentityDbContext<IdentityUser,
-    IdentityRole,
-    string, IdentityUserClaim<string>,
+public class ApplicationDbContext : IdentityDbContext<
+    ApplicationUser,
+    ApplicationRole,
+    string, 
+    IdentityUserClaim<string>,
     IdentityUserRole<string>,
     IdentityUserLogin<string>,
-    IdentityRoleClaim<string>,
+    ApplicationRoleClaim,
     IdentityUserToken<string>>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

@@ -1,5 +1,6 @@
 using Infrastructure.Context;
 using Infrastructure.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Api;
 
@@ -9,14 +10,16 @@ public static class ServiceCollectionExtention
     internal static IServiceCollection AddIdentitySettings(this IServiceCollection services)
     {
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-        {
-            options.Password.RequiredLength = 6;
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.User.RequireUniqueEmail = true;
-        }).AddEntityFrameworkStores<ApplicationDbContext>();
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         return services;
     }
 

@@ -26,6 +26,8 @@ public class ApplicationDbSeeder(
     {
         if ((await _context.Database.GetPendingMigrationsAsync()).Any())
         {
+            var xx = await _context.Database.GetPendingMigrationsAsync();
+            
             await _context.Database.MigrateAsync();
         }
     }
@@ -92,7 +94,8 @@ public class ApplicationDbSeeder(
             PhoneNumber = "+98 9399172443",
             NormalizedEmail = AppCredentials.DefaultEmail.ToUpperInvariant(),
             NormalizedUserName = adminUserName.ToUpperInvariant(),
-            IsActive = true
+            IsActive = true,
+            RefreshToken = "",
         };
 
         if (!await _userManager.Users.AnyAsync(u => u.Email == adminUser.Email))
