@@ -11,5 +11,5 @@ services:
       MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
       MSSQL_DATA_DIR: "/my/file/path"  # Custom data directory
     volumes:
-      - C:\my-sql-data:/my/file/path  # Bind mount for persistent data
+      -  ./my-sql-data:/my/file/path  # Bind mount for persistent data
     restart: always
