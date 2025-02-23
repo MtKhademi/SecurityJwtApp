@@ -1,0 +1,15 @@
+﻿version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-container
+    ports:
+      - "1444:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
+      MSSQL_DATA_DIR: "/my/file/path"  # Custom data directory
+    volumes:
+      - C:\my-sql-data:/my/file/path  # Bind mount for persistent data
+    restart: always
