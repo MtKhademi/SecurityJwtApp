@@ -1,10 +1,11 @@
 using Common.Requests;
 using Common.Responses;
+using Common.Responses.Wrappers;
 
 namespace Application.Services.Identity;
 
 public interface ITokenService
 {
-    Task<TokenResponse> GetTokenAsync(TokenRequest tokenRequest, CancellationToken cancellationToken = default);
-    Task<TokenResponse> GetRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken = default);
+    Task<ResponseWrapper<TokenResponse>> GetTokenAsync(TokenRequest tokenRequest, CancellationToken cancellationToken = default);
+    Task<ResponseWrapper<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken = default);
 }
