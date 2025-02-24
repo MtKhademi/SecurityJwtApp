@@ -59,10 +59,36 @@ public class TokenService : ITokenService
         };
     }
 
-    public Task<ResponseWrapper<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken = default)
+    
+    public async Task<ResponseWrapper<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest? refreshTokenRequest, CancellationToken cancellationToken = default)
     {
         if(refreshTokenRequest is null)
-            return await ResponseWrapper<>
+            return await ResponseWrapper<TokenResponse>.FailAsync("Invalid refresh token.");
+        
+        var userPrincipal = GetPrincipalFromExpiredToken(refreshTokenRequest.Token);
+        var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
+        var user = await _userManager.FindByEmailAsync(userEmail);
+        
+        if(user is null)
+            return await ResponseWrapper<TokenResponse>.FailAsync("User not found.");
+        if(user.RefreshToken != refreshTokenRequest.Token ||
+           user.RefreshTokenExpiryDate <= DateTime.Now)
+            return await ResponseWrapper<TokenResponse>.FailAsync("Invalid refresh token.");
+
+        var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
+
+        user.RefreshToken = GenerateRefreshToken();
+        user.RefreshTokenExpiryDate = DateTime.Now.AddDays(7);
+        await _userManager.UpdateAsync(user);
+
+        var response = new TokenResponse()
+        {
+            Token = token,
+            RefreshToken = user.RefreshToken,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryDate
+        };
+        
+        return await ResponseWrapper<TokenResponse>.SuccessAsync(response);
     }
 
 
@@ -127,4 +153,28 @@ public class TokenService : ITokenService
 
         return claims;
     }
+
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfiguration.Secret)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RoleClaimType = ClaimTypes.Role,
+            ClockSkew = TimeSpan.Zero
+        };
+        
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        
+        if(securityToken is not JwtSecurityToken jwtSecurityToken || 
+           !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+
+        return principal;
+
+    }
+    
 }

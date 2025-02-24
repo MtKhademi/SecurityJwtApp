@@ -7,5 +7,5 @@ namespace Application.Services.Identity;
 public interface ITokenService
 {
     Task<ResponseWrapper<TokenResponse>> GetTokenAsync(TokenRequest tokenRequest, CancellationToken cancellationToken = default);
-    Task<ResponseWrapper<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken = default);
+    Task<ResponseWrapper<TokenResponse>> GetRefreshTokenAsync(RefreshTokenRequest? refreshTokenRequest, CancellationToken cancellationToken = default);
 }
