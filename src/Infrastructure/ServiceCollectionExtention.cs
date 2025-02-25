@@ -1,4 +1,6 @@
-﻿using Infrastructure.Context;
+﻿using Application.Services.Identity;
+using Infrastructure.Context;
+using Infrastructure.Services.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,8 @@ public static class ServiceCollectionExtention
                 // options.UseInMemoryDatabase(Guid.NewGuid().ToString()))
             .AddTransient<ApplicationDbSeeder>();
 
+        services.AddScoped<ITokenService, TokenService>();
+        
         return services;
     }
 }
