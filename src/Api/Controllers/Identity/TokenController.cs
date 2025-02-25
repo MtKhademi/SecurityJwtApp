@@ -10,9 +10,6 @@ public class TokenController : MyBaseController<TokenController>
     [HttpPost("get-token")]
     public async Task<IActionResult> GetToken([FromBody] TokenRequest request)
     {
-        
-        
-        
         var response = await MediatorSender.Send(new GetTokenQuery()
         {
             TokenRequest = request
