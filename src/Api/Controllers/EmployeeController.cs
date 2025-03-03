@@ -1,4 +1,5 @@
 using Application.Features.Employees.Commands;
+using Application.Features.Employees.Queries;
 using Common.Requests.Employees;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,24 @@ public class EmployeeController : MyBaseController<EmployeeController>
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeRequest request)
     {
         var response = await MediatorSender.Send(new UpdateEmployeeCommand() { UpdateEmployeeRequest = request });
+        if (response.IsSuccessful)
+            return Ok(response);
+        return BadRequest(response);
+    }
+    
+    [HttpDelete("{employeeId}")]
+    public async Task<IActionResult> DeleteEmployee([FromRoute] int employeeId)
+    {
+        var response = await MediatorSender.Send(new DeleteEmployeeCommand() { EmployeeId = employeeId });
+        if (response.IsSuccessful)
+            return Ok(response);
+        return BadRequest(response);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetEmployees()
+    {
+        var response = await MediatorSender.Send(new GetEmployeesQuery());
         if (response.IsSuccessful)
             return Ok(response);
         return BadRequest(response);
