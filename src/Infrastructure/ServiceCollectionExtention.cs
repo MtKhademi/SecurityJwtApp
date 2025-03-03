@@ -1,5 +1,7 @@
-﻿using Application.Services.Identity;
+﻿using Application.Services;
+using Application.Services.Identity;
 using Infrastructure.Context;
+using Infrastructure.Services;
 using Infrastructure.Services.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ public static class ServiceCollectionExtention
             .AddTransient<ApplicationDbSeeder>();
 
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
         
         return services;
     }

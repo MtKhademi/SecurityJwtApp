@@ -1,5 +1,4 @@
 using System.Reflection;
-using Application.Services.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -12,6 +11,8 @@ public static class ServiceCollectionExtention
         var assembly = Assembly.GetExecutingAssembly();
         
         services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(assembly));
+
+        services.AddAutoMapper(assembly);
         
         return services;
     }
