@@ -1,5 +1,6 @@
 using Application.Features.Identity.Queries;
 using Common.Requests;
+using Common.Requests.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Identity;
