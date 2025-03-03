@@ -1,3 +1,5 @@
+using Api.Attributes;
+using Common.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -19,6 +21,7 @@ namespace Api.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
+        [MustHavePermission("APP",AppActions.Read)]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

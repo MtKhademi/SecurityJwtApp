@@ -16,7 +16,6 @@ namespace Api;
 
 public static class ServiceCollectionExtention
 {
-
     internal static IServiceCollection AddIdentitySettings(this IServiceCollection services)
     {
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -33,7 +32,7 @@ public static class ServiceCollectionExtention
         return services;
     }
 
-    
+
     internal static IApplicationBuilder SeedDatabase(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
@@ -45,7 +44,7 @@ public static class ServiceCollectionExtention
     internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
         AppConfiguration config)
     {
-        var key = Encoding.ASCII.GetBytes(config.Secret);
+        var key = Encoding.UTF8.GetBytes(config.Secret);
 
         services.AddAuthentication(auth =>
             {
@@ -93,6 +92,7 @@ public static class ServiceCollectionExtention
                                     ResponseWrapper.Fail("You are not Authorized"));
                             return context.Response.WriteAsync(result);
                         }
+
                         return Task.CompletedTask;
                     },
                     OnForbidden = context =>
@@ -110,16 +110,22 @@ public static class ServiceCollectionExtention
 
         services.AddAuthorization(options =>
         {
-            foreach (var prop in typeof(AppPermissions).GetNestedTypes().SelectMany(c=>c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+            foreach (var prop in typeof(AppPermissions)
+                         .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy))
             {
                 var propertyValue = prop.GetValue(null);
                 if (propertyValue is not null)
                 {
-                    options.AddPolicy(propertyValue.ToString(),policy=>policy.RequireClaim(AppClaim.Permission,propertyValue.ToString()));
+                    var permissions = propertyValue as IReadOnlyList<AppPermission>;
+                    foreach (var permission in permissions)
+                    {
+                        options.AddPolicy(permission.Name,
+                            policy => policy.RequireClaim(AppClaim.Permission, permission.Name));
+                    }
                 }
             }
         });
-        
+
         return services;
     }
 
@@ -127,14 +133,14 @@ public static class ServiceCollectionExtention
     {
         var applicationSettings = config.GetSection(nameof(AppConfiguration));
         services.Configure<AppConfiguration>(applicationSettings);
-        return applicationSettings.Get<AppConfiguration>(); 
+        return applicationSettings.Get<AppConfiguration>();
     }
 
     internal static void RegisterSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme()
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {
                 Name = "Authorization",
                 In = ParameterLocation.Header,
@@ -156,11 +162,12 @@ public static class ServiceCollectionExtention
                         Scheme = "Bearer",
                         Name = "Bearer",
                         In = ParameterLocation.Header
-                    },new List<string>()
+                    },
+                    new List<string>()
                 }
             });
-            
-            options.SwaggerDoc("v1",new OpenApiInfo() // if write V1(uppercase) not working
+
+            options.SwaggerDoc("v1", new OpenApiInfo() // if write V1(uppercase) not working
             {
                 Version = "v1",
                 Title = "V1 API - TITLE",
@@ -170,7 +177,6 @@ public static class ServiceCollectionExtention
                     Url = new Uri("https://opensource.org/licenses/MIT")
                 }
             });
-            
         });
     }
 }
