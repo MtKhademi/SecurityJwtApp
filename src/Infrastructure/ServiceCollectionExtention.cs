@@ -1,4 +1,5 @@
-﻿using Application.Services;
+﻿using System.Reflection;
+using Application.Services;
 using Application.Services.Identity;
 using Infrastructure.Context;
 using Infrastructure.Services;
@@ -20,6 +21,8 @@ public static class ServiceCollectionExtention
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserService, UserService>();
+
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         
         return services;
     }
