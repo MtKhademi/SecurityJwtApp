@@ -38,8 +38,7 @@ public class UserService(
         var userResult = await _userManager.CreateAsync(newUser, request.Password);
 
         if (!userResult.Succeeded)
-            return await ResponseWrapper.FailAsync(
-                $"User creation failed :: {string.Join('-', userResult.Errors.Select(x => x.Description))}");
+            return await ResponseWrapper.FailAsync(GetIdentityResultErrors(userResult));
 
         await _userManager.AddToRoleAsync(newUser, AppRoles.Basic);
 
@@ -79,7 +78,7 @@ public class UserService(
         if (updateResult.Succeeded)
             return await ResponseWrapper<string>.SuccessAsync("User modified successfully");
 
-        return await ResponseWrapper<string>.FailAsync("User modification failed");
+        return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(updateResult));
     }
 
     public async Task<IResponseWrapper> ChangeUserPasswordAsync(ChangePasswordRequest request, string userId)
@@ -93,7 +92,7 @@ public class UserService(
         if (changeResult.Succeeded)
             return await ResponseWrapper<string>.SuccessAsync("Password changed successfully");
 
-        return await ResponseWrapper<string>.FailAsync("Password change failed");
+        return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(changeResult));
     }
 
     public async Task<IResponseWrapper> ChangeUserStatusAsync(ChangeUserStatusRequest request)
@@ -101,10 +100,15 @@ public class UserService(
         var userInDb = await _userManager.FindByIdAsync(request.UserId);
         if (userInDb is null)
             return await ResponseWrapper<UserResponse>.FailAsync("User not found");
-        
+
         userInDb.IsActive = request.Active;
-        await _userManager.UpdateAsync(userInDb);
-        
-        return await ResponseWrapper<string>.SuccessAsync("User modified successfully");
+        var identityResult = await _userManager.UpdateAsync(userInDb);
+        if (identityResult.Succeeded) return await ResponseWrapper<string>.SuccessAsync("User modified successfully");
+        return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(identityResult));
+    }
+
+    private List<string> GetIdentityResultErrors(IdentityResult identityResult)
+    {
+        return identityResult.Errors.Select(er => er.Description).ToList();
     }
 }
