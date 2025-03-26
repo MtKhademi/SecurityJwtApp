@@ -107,6 +107,34 @@ public class UserService(
         return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(identityResult));
     }
 
+    public async Task<IResponseWrapper> GetRolesAsync(string userId)
+    {
+        var userRoles = new List<UserRoleViewModel>();
+        var userInDb =await _userManager.FindByIdAsync(userId);
+        if(userInDb is null)
+            return await ResponseWrapper<string>.FailAsync("User not found");
+        
+        var allRoles = await _roleManager.Roles.ToListAsync();
+        foreach (var role in allRoles)
+        {
+            var userRoleVM = new UserRoleViewModel
+            {
+                RoleName = role.Name,
+                RoleDescription = role.Description,
+                IsAssignedToUser = false
+            };
+            
+            if (await _userManager.IsInRoleAsync(userInDb, role.Name))
+            {
+                userRoleVM.IsAssignedToUser = true;
+            }
+            
+            userRoles.Add(userRoleVM);
+        }
+
+        return await ResponseWrapper<List<UserRoleViewModel>>.SuccessAsync(userRoles);
+    }
+
     private List<string> GetIdentityResultErrors(IdentityResult identityResult)
     {
         return identityResult.Errors.Select(er => er.Description).ToList();
