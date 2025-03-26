@@ -92,4 +92,13 @@ public class UserController : MyBaseController<UserController>
         
         return NotFound(response);
     }
+
+    [HttpPut("roles/change")]
+    public async Task<IActionResult> UpdateRoles([FromBody] UpdateUserRoleRequest request)
+    {
+        var response = await MediatorSender.Send(new UpdateUserRoleCommand { Request = request });
+        if (response.IsSuccessful)
+            return Ok(response);
+        return BadRequest(response);
+    }
 }

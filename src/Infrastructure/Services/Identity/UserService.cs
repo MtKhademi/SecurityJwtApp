@@ -10,7 +10,8 @@ namespace Infrastructure.Services.Identity;
 public class UserService(
     UserManager<ApplicationUser> _userManager,
     RoleManager<ApplicationRole> _roleManager,
-    IMapper mapper) : IUserService
+    IMapper mapper,
+    ICurrentUserService currentUserService) : IUserService
 {
     public async Task<IResponseWrapper> RegisterUserAsync(UserRegistrationRequest request)
     {
@@ -110,10 +111,10 @@ public class UserService(
     public async Task<IResponseWrapper> GetRolesAsync(string userId)
     {
         var userRoles = new List<UserRoleViewModel>();
-        var userInDb =await _userManager.FindByIdAsync(userId);
-        if(userInDb is null)
+        var userInDb = await _userManager.FindByIdAsync(userId);
+        if (userInDb is null)
             return await ResponseWrapper<string>.FailAsync("User not found");
-        
+
         var allRoles = await _roleManager.Roles.ToListAsync();
         foreach (var role in allRoles)
         {
@@ -123,16 +124,48 @@ public class UserService(
                 RoleDescription = role.Description,
                 IsAssignedToUser = false
             };
-            
+
             if (await _userManager.IsInRoleAsync(userInDb, role.Name))
             {
                 userRoleVM.IsAssignedToUser = true;
             }
-            
+
             userRoles.Add(userRoleVM);
         }
 
         return await ResponseWrapper<List<UserRoleViewModel>>.SuccessAsync(userRoles);
+    }
+
+    public async Task<IResponseWrapper> UpdateUserRolesAsync(UpdateUserRoleRequest request)
+    {
+        // cannot un-assign administrator
+        // default admin user seeded by addplication cannot be assigned/un-assigned
+        var userInDb = await _userManager.FindByIdAsync(request.UserId);
+        if (userInDb is null)
+            return await ResponseWrapper<string>.FailAsync("User not found");
+
+        if (userInDb.Email == AppCredentials.DefaultAdminEmail || userInDb.Email == AppCredentials.DefaultBasicEmail)
+            return await ResponseWrapper<string>.FailAsync("You cannot change basic data");
+
+        var roles = await _userManager.GetRolesAsync(userInDb);
+        var rolesToBeAssigned = request.Roles.Where(r => r.IsAssignedToUser).ToList();
+
+        var currentLoggedUser = await _userManager.FindByIdAsync(currentUserService.UserId);
+        if (currentLoggedUser is null)
+            return await ResponseWrapper<string>.FailAsync("User not found");
+
+        if (!await _userManager.IsInRoleAsync(currentLoggedUser, AppRoles.Admin))
+            return await ResponseWrapper<string>.FailAsync("Only administrators can change roles");
+
+        var result = await _userManager.RemoveFromRolesAsync(userInDb, roles);
+        if (!result.Succeeded)
+            return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(result));
+        
+        var resultAddRoles = await _userManager.AddToRolesAsync(userInDb,rolesToBeAssigned.Select(x=>x.RoleName));
+        if(!resultAddRoles.Succeeded)
+            return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(resultAddRoles));
+        
+        return await ResponseWrapper<string>.SuccessAsync("User roles modified successfully");
     }
 
     private List<string> GetIdentityResultErrors(IdentityResult identityResult)

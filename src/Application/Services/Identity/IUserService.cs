@@ -17,4 +17,6 @@ public interface IUserService
     Task<IResponseWrapper> ChangeUserStatusAsync(ChangeUserStatusRequest request);
     
     Task<IResponseWrapper> GetRolesAsync(string userId);
+    
+    Task<IResponseWrapper> UpdateUserRolesAsync(UpdateUserRoleRequest request);
 }
