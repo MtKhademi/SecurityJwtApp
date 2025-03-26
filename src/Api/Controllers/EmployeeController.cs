@@ -1,5 +1,7 @@
+using Api.Attributes;
 using Application.Features.Employees.Commands;
 using Application.Features.Employees.Queries;
+using Common.Authorization;
 using Common.Requests.Employees;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +11,7 @@ namespace Api.Controllers;
 public class EmployeeController : MyBaseController<EmployeeController>
 {
     [HttpPost]
+    [MustHavePermission(AppFeature.Employees,AppActions.Create)]
     public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeRequest request)
     {
         var response = await MediatorSender.Send(new CreateEmployeeCommand { EmployeeRequest = request });
@@ -18,6 +21,7 @@ public class EmployeeController : MyBaseController<EmployeeController>
     }
     
     [HttpPut]
+    [MustHavePermission(AppFeature.Employees,AppActions.Update)]
     public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeRequest request)
     {
         var response = await MediatorSender.Send(new UpdateEmployeeCommand() { UpdateEmployeeRequest = request });
@@ -27,6 +31,7 @@ public class EmployeeController : MyBaseController<EmployeeController>
     }
     
     [HttpDelete("{employeeId}")]
+    [MustHavePermission(AppFeature.Employees,AppActions.Delete)]
     public async Task<IActionResult> DeleteEmployee([FromRoute] int employeeId)
     {
         var response = await MediatorSender.Send(new DeleteEmployeeCommand() { EmployeeId = employeeId });
@@ -36,6 +41,7 @@ public class EmployeeController : MyBaseController<EmployeeController>
     }
     
     [HttpGet]
+    [MustHavePermission(AppFeature.Employees,AppActions.Read)]
     public async Task<IActionResult> GetEmployees()
     {
         var response = await MediatorSender.Send(new GetEmployeesQuery());

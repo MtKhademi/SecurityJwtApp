@@ -18,6 +18,7 @@ public class ApplicationDbSeeder(
         // seed roles
         await SeedRolesAsync();
         // seed admin
+        await SeedBasicUserAsync();
         await SeedAdminUserAsync();
 
     }
@@ -82,17 +83,17 @@ public class ApplicationDbSeeder(
     private async Task SeedAdminUserAsync()
     {
         string adminUserName =
-            AppCredentials.DefaultEmail[..AppCredentials.DefaultEmail.IndexOf('@')].ToLowerInvariant();
+            AppCredentials.DefaultAdminEmail[..AppCredentials.DefaultAdminEmail.IndexOf('@')].ToLowerInvariant();
         var adminUser = new ApplicationUser
         {
             FirstName = "Mt",
             LastName = "Khademi",
-            Email = AppCredentials.DefaultEmail,
+            Email = AppCredentials.DefaultAdminEmail,
             UserName = adminUserName,
             EmailConfirmed = true,
             PhoneNumberConfirmed = true,
             PhoneNumber = "+98 9399172443",
-            NormalizedEmail = AppCredentials.DefaultEmail.ToUpperInvariant(),
+            NormalizedEmail = AppCredentials.DefaultAdminEmail.ToUpperInvariant(),
             NormalizedUserName = adminUserName.ToUpperInvariant(),
             IsActive = true,
             RefreshToken = "",
@@ -101,7 +102,7 @@ public class ApplicationDbSeeder(
         if (!await _userManager.Users.AnyAsync(u => u.Email == adminUser.Email))
         {
             var password = new PasswordHasher<ApplicationUser>();
-            adminUser.PasswordHash = password.HashPassword(adminUser, AppCredentials.DefaultPassword);
+            adminUser.PasswordHash = password.HashPassword(adminUser, AppCredentials.DefaultAdminPassword);
             await _userManager.CreateAsync(adminUser);
         }
         
@@ -110,6 +111,38 @@ public class ApplicationDbSeeder(
             !await _userManager.IsInRoleAsync(adminUser, AppRoles.Admin))
         {
             await _userManager.AddToRolesAsync(adminUser, AppRoles.DefaultRoles);
+        }
+    }
+    private async Task SeedBasicUserAsync()
+    {
+        string basicUserName =
+            AppCredentials.DefaultBasicEmail[..AppCredentials.DefaultBasicEmail.IndexOf('@')].ToLowerInvariant();
+        var basicUser = new ApplicationUser
+        {
+            FirstName = "Mt",
+            LastName = "Khademi",
+            Email = AppCredentials.DefaultBasicEmail,
+            UserName = basicUserName,
+            EmailConfirmed = true,
+            PhoneNumberConfirmed = true,
+            PhoneNumber = "+98 9399172443",
+            NormalizedEmail = AppCredentials.DefaultBasicEmail.ToUpperInvariant(),
+            NormalizedUserName = basicUserName.ToUpperInvariant(),
+            IsActive = true,
+            RefreshToken = "",
+        };
+
+        if (!await _userManager.Users.AnyAsync(u => u.Email == basicUser.Email))
+        {
+            var password = new PasswordHasher<ApplicationUser>();
+            basicUser.PasswordHash = password.HashPassword(basicUser, AppCredentials.DefaultBasicPassword);
+            await _userManager.CreateAsync(basicUser);
+        }
+        
+        // Assign role to user
+        if (!await _userManager.IsInRoleAsync(basicUser, AppRoles.Basic))
+        {
+            await _userManager.AddToRolesAsync(basicUser, AppRoles.BasicRoles);
         }
     }
     
