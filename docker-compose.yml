@@ -9,7 +9,9 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
-      MSSQL_DATA_DIR: "/my/file/path"  # Custom data directory
+#      MSSQL_DATA_DIR: "/my/file/path"  # Custom data directory
     volumes:
-      -  ./my-sql-data:/my/file/path  # Bind mount for persistent data
+#      -  ./my-sql-data:/my/file/path  # Bind mount for persistent data
+      -  ./my-sql-data:/var/opt/mssql/data  # Bind mount for persistent data
     restart: always
+    
