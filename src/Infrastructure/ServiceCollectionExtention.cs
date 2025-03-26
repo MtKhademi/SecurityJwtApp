@@ -21,6 +21,8 @@ public static class ServiceCollectionExtention
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         
