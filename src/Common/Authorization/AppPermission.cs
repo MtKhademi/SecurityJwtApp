@@ -25,6 +25,8 @@ public class AppPermissions
         
         new AppPermission(AppFeature.Roles,AppActions.Read,AppRoleGroup.SystemAccess,"Read Roles"),
         new AppPermission(AppFeature.Roles,AppActions.Update,AppRoleGroup.SystemAccess,"Update Roles"),
+        new AppPermission(AppFeature.Roles,AppActions.Create,AppRoleGroup.SystemAccess,"Create Role"),
+        new AppPermission(AppFeature.Roles,AppActions.Delete,AppRoleGroup.SystemAccess,"Delete Role"),
         
         new AppPermission(AppFeature.RoleClaims,AppActions.Read,AppRoleGroup.SystemAccess,"Read Role claims/permissions"),
         new AppPermission(AppFeature.RoleClaims,AppActions.Update,AppRoleGroup.SystemAccess,"Update Role claims/permissins"),

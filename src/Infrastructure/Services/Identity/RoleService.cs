@@ -1,5 +1,7 @@
 using Application.Services.Identity;
+using AutoMapper;
 using Common.Requests.Identity;
+using Common.Responses.Identity;
 using Common.Responses.Wrappers;
 using Infrastructure.Extentions;
 
@@ -7,7 +9,8 @@ namespace Infrastructure.Services.Identity;
 
 public class RoleService(
     UserManager<ApplicationUser> userManager,
-    RoleManager<ApplicationRole> roleManager) : IRoleService
+    RoleManager<ApplicationRole> roleManager,
+    IMapper mapper) : IRoleService
 {
     public async Task<IResponseWrapper> CreateRoleAsync(CreateRoleRequest request)
     {
@@ -25,5 +28,12 @@ public class RoleService(
             return await ResponseWrapper<string>.FailAsync(resultCreate.GetErrors());
 
         return await ResponseWrapper<ApplicationRole>.SuccessAsync(role, "Role created");
+    }
+
+    public async Task<IResponseWrapper> GetRolesAsync()
+    {
+        var allRoles = await roleManager.Roles.ToListAsync();
+        return await ResponseWrapper<List<RoleResponse>>.SuccessAsync(
+            data: mapper.Map<List<RoleResponse>>(allRoles), "Roles");
     }
 }

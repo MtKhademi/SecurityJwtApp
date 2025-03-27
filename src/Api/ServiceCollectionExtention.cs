@@ -103,7 +103,7 @@ public static class ServiceCollectionExtention
                             Newtonsoft.Json.JsonConvert.SerializeObject(
                                 ResponseWrapper.Fail("You are not Authorized to access this resource"));
                         return context.Response.WriteAsync(result);
-                    },
+                    }
                 };
             });
 

@@ -9,5 +9,8 @@ public class MappingProfiles : Profile
     {
         CreateMap<ApplicationUser, UserResponse>()
             .ForMember(des => des.UserId, opt => opt.MapFrom(src => src.Id));
+
+        CreateMap<ApplicationRole, RoleResponse>();
+
     }
 }
