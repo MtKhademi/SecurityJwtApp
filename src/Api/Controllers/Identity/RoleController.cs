@@ -29,4 +29,14 @@ public class RoleController : MyBaseController<RoleController>
             return Ok(response);
         return BadRequest(response);
     }
+
+    [HttpGet("/permission/{roleId}")]
+    [MustHavePermission(AppFeature.Roles, AppActions.Read)]
+    public async Task<IActionResult> GetPersmissions(string roleId)
+    {
+        var response = await MediatorSender.Send(new GetPermissionsQuery() { RoleId = roleId });
+        if (response.IsSuccessful)
+            return Ok(response);
+        return BadRequest(response);
+    } 
 }

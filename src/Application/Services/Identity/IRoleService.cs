@@ -7,5 +7,7 @@ public interface IRoleService
 {
     Task<IResponseWrapper> CreateRoleAsync(CreateRoleRequest request);
     Task<IResponseWrapper> GetRolesAsync();
+    
+    Task<IResponseWrapper> GetPermissionsAsync(string roleId);
 
 }

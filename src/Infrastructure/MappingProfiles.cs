@@ -12,5 +12,6 @@ public class MappingProfiles : Profile
 
         CreateMap<ApplicationRole, RoleResponse>();
 
+        CreateMap<ApplicationRoleClaim, RoleClaimViewModel>();
     }
 }
