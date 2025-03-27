@@ -4,6 +4,7 @@ using Common.Authorization;
 using Common.Requests.Identity;
 using Common.Responses.Identity;
 using Common.Responses.Wrappers;
+using Infrastructure.Extentions;
 
 namespace Infrastructure.Services.Identity;
 
@@ -39,7 +40,7 @@ public class UserService(
         var userResult = await _userManager.CreateAsync(newUser, request.Password);
 
         if (!userResult.Succeeded)
-            return await ResponseWrapper.FailAsync(GetIdentityResultErrors(userResult));
+            return await ResponseWrapper.FailAsync(userResult.GetErrors());
 
         await _userManager.AddToRoleAsync(newUser, AppRoles.Basic);
 
@@ -79,7 +80,7 @@ public class UserService(
         if (updateResult.Succeeded)
             return await ResponseWrapper<string>.SuccessAsync("User modified successfully");
 
-        return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(updateResult));
+        return await ResponseWrapper<string>.FailAsync(updateResult.GetErrors());
     }
 
     public async Task<IResponseWrapper> ChangeUserPasswordAsync(ChangePasswordRequest request, string userId)
@@ -93,7 +94,7 @@ public class UserService(
         if (changeResult.Succeeded)
             return await ResponseWrapper<string>.SuccessAsync("Password changed successfully");
 
-        return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(changeResult));
+        return await ResponseWrapper<string>.FailAsync(changeResult.GetErrors());
     }
 
     public async Task<IResponseWrapper> ChangeUserStatusAsync(ChangeUserStatusRequest request)
@@ -105,7 +106,7 @@ public class UserService(
         userInDb.IsActive = request.Active;
         var identityResult = await _userManager.UpdateAsync(userInDb);
         if (identityResult.Succeeded) return await ResponseWrapper<string>.SuccessAsync("User modified successfully");
-        return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(identityResult));
+        return await ResponseWrapper<string>.FailAsync(identityResult.GetErrors());
     }
 
     public async Task<IResponseWrapper> GetRolesAsync(string userId)
@@ -159,17 +160,13 @@ public class UserService(
 
         var result = await _userManager.RemoveFromRolesAsync(userInDb, roles);
         if (!result.Succeeded)
-            return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(result));
+            return await ResponseWrapper<string>.FailAsync(result.GetErrors());
         
         var resultAddRoles = await _userManager.AddToRolesAsync(userInDb,rolesToBeAssigned.Select(x=>x.RoleName));
         if(!resultAddRoles.Succeeded)
-            return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrors(resultAddRoles));
+            return await ResponseWrapper<string>.FailAsync(resultAddRoles.GetErrors());
         
         return await ResponseWrapper<string>.SuccessAsync("User roles modified successfully");
     }
 
-    private List<string> GetIdentityResultErrors(IdentityResult identityResult)
-    {
-        return identityResult.Errors.Select(er => er.Description).ToList();
-    }
 }
