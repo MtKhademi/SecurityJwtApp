@@ -12,10 +12,14 @@ builder.Services.AddAuthentication()
     });
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy =>
-        policy.RequireClaim("Admin"));
-    options.AddPolicy("User", policy =>
-        policy.RequireClaim("User"));
+    //options.AddPolicy("Admin", policy =>
+    //    policy.RequireClaim("Admin"));
+    //options.AddPolicy("User", policy =>
+    //    policy.RequireClaim("User"));
+
+    options.AddPolicy("MustBelongToHRDepartment", policy =>
+        policy.RequireClaim("Department", "HR"));
+
 });
 
 var app = builder.Build();
