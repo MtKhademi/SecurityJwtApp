@@ -24,7 +24,8 @@ public class Login : PageModel
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, Credential.UserName),
-                new Claim(ClaimTypes.Email, "admin@email.com")
+                new Claim(ClaimTypes.Email, "admin@email.com"),
+                new Claim("Department", "HR"),
             };
 
             var identity = new ClaimsIdentity(claims, "MyCookieAuth");
