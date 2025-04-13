@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
+using RazorPage_Identity.Authrozation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,9 +26,14 @@ builder.Services.AddAuthorization(options =>
     
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireClaim("Admin"));
+    
+    options.AddPolicy("HRManagerOnly", policy =>
+        policy.RequireClaim("Department", "HR")
+            .RequireClaim("Manager")
+            .Requirements.Add(new HRManagementRequirement(4)));
 
 });
-
+builder.Services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
