@@ -24,9 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "L001", "L001", "{02EA681E-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "L002", "L002", "{682017D3-32F5-4526-A022-9DC8E4B309F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPage_Identity", "src\RazorPage_Identity\RazorPage_Identity.csproj", "{AAF6EAB9-5E58-4298-8752-CCA6BAA27671}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_001_Razor_Identity", "src\RazorPage_Identity\_001_Razor_Identity.csproj", "{AAF6EAB9-5E58-4298-8752-CCA6BAA27671}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi_Identity", "src\WebApi_Identity\WebApi_Identity.csproj", "{7B7E2AED-43FD-46AB-A1E2-5A6DE088222C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_002_WebApi_JWT", "src\WebApi_Identity\_002_WebApi_JWT.csproj", "{7B7E2AED-43FD-46AB-A1E2-5A6DE088222C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_003_Razor_Identity", "_003_Razor_Identity\_003_Razor_Identity.csproj", "{855A71A6-E1FF-4EC9-9D8A-012B1530ACA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +64,10 @@ Global
 		{7B7E2AED-43FD-46AB-A1E2-5A6DE088222C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B7E2AED-43FD-46AB-A1E2-5A6DE088222C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B7E2AED-43FD-46AB-A1E2-5A6DE088222C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{855A71A6-E1FF-4EC9-9D8A-012B1530ACA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{855A71A6-E1FF-4EC9-9D8A-012B1530ACA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{855A71A6-E1FF-4EC9-9D8A-012B1530ACA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{855A71A6-E1FF-4EC9-9D8A-012B1530ACA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{682017D3-32F5-4526-A022-9DC8E4B309F4} = {C0719138-BDB5-4E47-979E-A52A15DFA5A8}
 		{AAF6EAB9-5E58-4298-8752-CCA6BAA27671} = {682017D3-32F5-4526-A022-9DC8E4B309F4}
 		{7B7E2AED-43FD-46AB-A1E2-5A6DE088222C} = {682017D3-32F5-4526-A022-9DC8E4B309F4}
+		{855A71A6-E1FF-4EC9-9D8A-012B1530ACA5} = {682017D3-32F5-4526-A022-9DC8E4B309F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA961FF4-2ECE-4912-B053-524E55D36BA3}

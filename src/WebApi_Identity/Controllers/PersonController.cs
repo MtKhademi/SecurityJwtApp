@@ -7,7 +7,7 @@ namespace WebApi_Identity.Controllers
     [ApiController]
     [Authorize]
     public class PersonController : ControllerBase
-    {
+    { 
         [HttpGet]
         public async Task<IActionResult> Gets()
         {
