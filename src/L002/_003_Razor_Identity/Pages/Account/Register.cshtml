@@ -8,10 +8,11 @@
 <br />
 <div class="container border p-5">
     <form method="post">
+        <div class="text-danger" asp-validation-summary="All"></div>
         <div class="form-group row mb-1">
             <label asp-for="RegisterInputModel.Email" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input asp-for="RegisterInputModel.Email" class="form-control" />
+                <input asp-for="RegisterInputModel.Email" class="form-control"/>
                 <span asp-validation-for="RegisterInputModel.Email" class="text-danger"></span>
             </div>
         </div>
@@ -19,12 +20,12 @@
         <div class="form-group row mt-2">
             <label asp-for="RegisterInputModel.Password" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-10">
-                <input type="password" asp-for="RegisterInputModel.Password" class="form-control" />
+                <input type="password" asp-for="RegisterInputModel.Password" class="form-control"/>
                 <span asp-validation-for="RegisterInputModel.Password" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row mt-2">
-            <input type="submit" class="btn btn-primary col-sm-2" value="Login" />
+            <input type="submit" class="btn btn-primary col-sm-2" value="Login"/>
         </div>
     </form>
 </div>
